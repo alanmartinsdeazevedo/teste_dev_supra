@@ -5,7 +5,7 @@
     </div>
     <div>
       <h1>QR Code <span>Studio</span></h1>
-      <p>Gerador de QR Codes personalizados</p>
+      <p>Impulsione conexões</p>
     </div>
   </header>
 </template>

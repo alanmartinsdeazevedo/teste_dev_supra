@@ -2,9 +2,20 @@
   <section class="card history">
     <div class="hdr">
       <h2>Histórico <span v-if="store.history.length" class="badge">{{ store.history.length }}</span></h2>
-      <button v-if="store.history.length" class="btn-clear" title="Limpar" @click="store.clearHistory" >
-        <Icon name="tabler:trash" />
-      </button>
+      <Transition name="fade" mode="out-in">
+        <div v-if="confirmClear" key="confirm" class="confirm-row">
+          <span>Tem certeza?</span>
+          <button class="btn-confirm-yes" title="Confirmar" @click="doClear">
+            <Icon name="tabler:check" />
+          </button>
+          <button class="btn-confirm-no" title="Cancelar" @click="confirmClear = false">
+            <Icon name="tabler:x" />
+          </button>
+        </div>
+        <button v-else-if="store.history.length" key="trash" class="btn-clear" title="Limpar histórico" @click="confirmClear = true">
+          <Icon name="tabler:trash" />
+        </button>
+      </Transition>
     </div>
 
     <div v-if="store.history.length" class="filters">
@@ -144,6 +155,13 @@ const handleLoad = (item: QRHistoryItem) => {
   emit('load', item)
 }
 
+const confirmClear = ref(false)
+
+const doClear = () => {
+  store.clearHistory()
+  confirmClear.value = false
+}
+
 const handleRemove = (id: string) => {
   if (selectedId.value === id) selectedId.value = null
   store.removeFromHistory(id)
@@ -197,6 +215,47 @@ h2 {
   border-color: var(--danger);
   color: var(--danger);
 }
+
+.confirm-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  height: 28px;
+}
+
+.btn-confirm-yes,
+.btn-confirm-no {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-confirm-yes:hover {
+  border-color: var(--danger);
+  background: #fef2f2;
+  color: var(--danger);
+}
+
+.btn-confirm-no:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.15s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
 /* Filtros */
 .filters {
