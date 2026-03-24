@@ -1,5 +1,5 @@
 <template>
-  <section class="card settings">
+  <section class="settings">
     <h2>Configurações</h2>
 
     <div class="form-group">

@@ -1,5 +1,5 @@
 <template>
-  <section class="card preview">
+  <section class="preview">
     <div class="hdr">
       <h2>Visualização</h2>
       <button v-if="url && !loading" class="btn-close" title="Fechar" @click="$emit('clear')">
@@ -7,50 +7,52 @@
       </button>
     </div>
 
-    <Transition name="fade" mode="out-in">
-      <div v-if="loading" key="loading" class="state-msg">
-        <div class="spinner" />
-        <p>Gerando...</p>
-      </div>
-
-      <div v-else-if="url" key="preview" class="qr-display">
-        <div class="qr-frame">
-          <img :src="url" alt="QR Code gerado" @error="$emit('error')" />
+    <div class="preview-body">
+      <Transition name="fade" mode="out-in">
+        <div v-if="loading" key="loading" class="state-msg">
+          <div class="spinner" />
+          <p>Gerando...</p>
         </div>
-        <span v-if="itemId" class="item-id">#{{ itemId.slice(-8) }}</span>
-        <div class="btn-row"> 
-          <button class="btn-action" @click="copyToClipboard">
-            <Icon :name="copied ? 'tabler:check' : 'tabler:copy'" />
-            {{ copied ? 'Copiado!' : 'Copiar' }}
-          </button>
-          <button class="btn-action btn-primary" @click="$emit('download')">
-            <Icon name="tabler:download" /> Baixar
-          </button>
-        </div>
-      </div>
 
-      <div v-else-if="previewUrl" key="live-preview" class="qr-display live-preview">
-        <div class="qr-frame">
-          <div v-if="!previewLoaded" class="preview-placeholder" />
-          <img
-            v-show="previewLoaded"
-            :src="previewUrl"
-            alt="Pré-visualização"
-            @load="previewLoaded = true"
-            @error="previewLoaded = false"
-          />
+        <div v-else-if="url" key="preview" class="qr-display">
+          <div class="qr-frame">
+            <img :src="url" alt="QR Code gerado" @error="$emit('error')" />
+          </div>
+          <span v-if="itemId" class="item-id">#{{ itemId.slice(-8) }}</span>
+          <div class="btn-row">
+            <button class="btn-action" @click="copyToClipboard">
+              <Icon :name="copied ? 'tabler:check' : 'tabler:copy'" />
+              {{ copied ? 'Copiado!' : 'Copiar' }}
+            </button>
+            <button class="btn-action btn-primary" @click="$emit('download')">
+              <Icon name="tabler:download" /> Baixar
+            </button>
+          </div>
         </div>
-        <p class="preview-hint">
-          <Icon name="tabler:eye" />
-          Pré-visualização
-        </p>
-      </div>
 
-      <div v-else key="empty" class="state-msg empty">
-        <Icon name="tabler:qrcode" class="empty-ico" />
-        <p>Configure e clique em <strong>Gerar</strong></p>
-      </div>
-    </Transition>
+        <div v-else-if="previewUrl" key="live-preview" class="qr-display live-preview">
+          <div class="qr-frame">
+            <div v-if="!previewLoaded" class="preview-placeholder" />
+            <img
+              v-show="previewLoaded"
+              :src="previewUrl"
+              alt="Pré-visualização"
+              @load="previewLoaded = true"
+              @error="previewLoaded = false"
+            />
+          </div>
+          <p class="preview-hint">
+            <Icon name="tabler:eye" />
+            Pré-visualização
+          </p>
+        </div>
+
+        <div v-else key="empty" class="state-msg empty">
+          <Icon name="tabler:qrcode" class="empty-ico" />
+          <p>Configure e clique em <strong>Gerar</strong></p>
+        </div>
+      </Transition>
+    </div>
   </section>
 </template>
 
@@ -129,6 +131,14 @@ const convertToPng = (blob: Blob): Promise<Blob> => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.preview-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 h2 {

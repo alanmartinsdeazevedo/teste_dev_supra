@@ -6,13 +6,11 @@
     </div>
 
     <div class="main-grid">
-      <div class="entrance entrance-1">
+      <div ref="previewRef" class="studio-card entrance entrance-1">
         <QRForm :loading="loading" @generate="handleGenerate($event)" />
-      </div>
-      <div ref="previewRef" class="entrance entrance-2">
         <QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" />
       </div>
-      <div class="entrance entrance-3">
+      <div class="entrance entrance-2">
         <QRHistory :active-id="currentId" @load="handleLoadFromHistory" />
       </div>
     </div>
@@ -151,7 +149,7 @@ body {
 
 .main-grid {
   display: grid;
-  grid-template-columns: minmax(0, 330px) 1fr minmax(0, 290px);
+  grid-template-columns: 1fr minmax(0, 290px);
   gap: 16px;
   align-items: start;
 }
@@ -169,22 +167,53 @@ body {
   min-width: 0;
 }
 
-.card.settings,
-.card.preview,
 .card.history {
   position: sticky;
   top: 16px;
 }
 
+.studio-card {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.studio-card .settings {
+  width: 330px;
+  flex-shrink: 0;
+  padding: 20px;
+  border-right: 1px solid var(--border);
+}
+
+.studio-card .preview {
+  flex: 1;
+  padding: 20px;
+  min-width: 0;
+  background: var(--surface-alt);
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 1024px) {
-  .main-grid { grid-template-columns: 1fr 1fr; }
-  .card.history { grid-column: 1 / -1; }
+  .main-grid { grid-template-columns: 1fr; }
+  .card.history { position: static; grid-column: 1; }
 }
 
 @media (max-width: 640px) {
-  .main-grid { grid-template-columns: 1fr; }
   .app-container { padding: 12px; }
-  .card.settings, .card.preview, .card.history { position: static; }
+  .studio-card { flex-direction: column; }
+  .studio-card .settings {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .studio-card .preview {
+    min-height: 260px;
+  }
 }
 
 /* Entrance animation */
@@ -206,5 +235,4 @@ body {
 .entrance-0 { animation-delay: 0s; }
 .entrance-1 { animation-delay: 0.08s; }
 .entrance-2 { animation-delay: 0.16s; }
-.entrance-3 { animation-delay: 0.24s; }
 </style>
