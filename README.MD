@@ -1,6 +1,21 @@
 # QR Code Studio - Teste para desenvolvedor | Supranet
 
+![Nuxt](https://img.shields.io/badge/Nuxt-4.x-00DC82?style=flat&logo=nuxt.js&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat&logo=vue.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-1.x-fbf0df?style=flat&logo=bun&logoColor=black)
+![Pinia](https://img.shields.io/badge/Pinia-2.x-FFD859?style=flat&logo=pinia&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker&logoColor=white)
+
 ![Guia de Features](./docs/feats-qrcode-studio.png)
+
+## Índice
+
+- [Arquitetura e decisões técnicas](#arquitetura-e-decisões-técnicas)
+- [Integração com a API goQR.me](#integração-com-a-api-goqrme)
+- [Funcionalidades do teste](#funcionalidades-do-teste)
+- [Funcionalidades adicionadas durante refinamento](#funcionalidades-adicionadas-no-refinamento)
+- [Como rodar](#como-rodar)
 
 ## Arquitetura e decisões técnicas
 
@@ -68,7 +83,7 @@ O proxy valida: presença do campo `data`, tamanho máximo de 900 caracteres, fo
 
 ## Como rodar
 
-### Com Docker (recomendado)
+### Com Docker
 
 ```bash
 # Clone o repositório
