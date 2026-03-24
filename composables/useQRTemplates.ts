@@ -5,8 +5,11 @@ export interface TemplateField {
   label: string
   placeholder: string
   type?: 'text' | 'select'
+  inputType?: string
   options?: { value: string; label: string }[]
   required?: boolean
+  validate?: (value: string) => boolean
+  validationMessage?: string
 }
 
 export interface QRTemplate {
@@ -72,7 +75,15 @@ const templates: QRTemplate[] = [
     label: 'E-mail',
     description: 'Enviar e-mail com assunto e corpo',
     fields: [
-      { key: 'address', label: 'E-mail', placeholder: 'contato@supranet.com.br', required: true },
+      {
+        key: 'address',
+        label: 'E-mail',
+        placeholder: 'contato@supranet.com.br',
+        inputType: 'email',
+        required: true,
+        validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+        validationMessage: 'Informe um e-mail válido'
+      },
       { key: 'subject', label: 'Assunto', placeholder: 'Assunto do e-mail' },
       { key: 'body', label: 'Mensagem', placeholder: 'Corpo do e-mail' }
     ],
@@ -90,7 +101,15 @@ const templates: QRTemplate[] = [
     label: 'Telefone',
     description: 'Ligar para um número',
     fields: [
-      { key: 'phone', label: 'Número', placeholder: '+55 31 99999-9999', required: true }
+      {
+        key: 'phone',
+        label: 'Número',
+        placeholder: '+55 31 99999-9999',
+        inputType: 'tel',
+        required: true,
+        validate: (v) => /^\+?[\d\s\-(). ]{6,}$/.test(v),
+        validationMessage: 'Informe um número de telefone válido'
+      }
     ],
     format: (v) => `tel:${v.phone || ''}`
   },
@@ -100,8 +119,8 @@ const templates: QRTemplate[] = [
     description: 'Cartão de visita (vCard)',
     fields: [
       { key: 'name', label: 'Nome', placeholder: 'João Silva', required: true },
-      { key: 'phone', label: 'Telefone', placeholder: '+55 11 99999-9999' },
-      { key: 'email', label: 'E-mail', placeholder: 'joao@supranet.com.br' },
+      { key: 'phone', label: 'Telefone', placeholder: '+55 11 99999-9999', inputType: 'tel' },
+      { key: 'email', label: 'E-mail', placeholder: 'joao@supranet.com.br', inputType: 'email' },
       { key: 'org', label: 'Empresa', placeholder: 'Supranet' },
       { key: 'title', label: 'Cargo', placeholder: 'Desenvolvedor' }
     ],

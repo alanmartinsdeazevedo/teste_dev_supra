@@ -12,7 +12,7 @@
           :title="tpl.description"
           @click="selectTemplate(tpl.type)"
         >
-          <Icon :name="templateIcons[tpl.type]" class="tpl-icon" />
+          <Icon :name="templateIcons[tpl.type]" class="tpl-icon" size="16" />
           <span>{{ tpl.label }}</span>
         </button>
       </div>
@@ -34,6 +34,7 @@
             v-else
             :id="`qr-${field.key}`"
             v-model="fieldValues[field.key]"
+            :type="field.inputType || 'text'"
             :placeholder="field.placeholder"
             @input="updateText"
             @keyup.enter="handleGenerate"
@@ -54,7 +55,15 @@
     <div class="adv-toggle" @click="toggleAdvanced">
       <Icon name="tabler:adjustments-horizontal" />
       <span>Personalizar</span>
-      <span class="adv-summary">{{ store.currentConfig.size }} · {{ store.currentConfig.format.toUpperCase() }}</span>
+      <span class="adv-summary">
+        <span
+          class="color-preview"
+          :style="{
+            background: `linear-gradient(135deg, ${store.currentConfig.color} 50%, ${store.currentConfig.bgcolor} 50%)`
+          }"
+        />
+        {{ store.currentConfig.size }} · {{ store.currentConfig.format.toUpperCase() }}
+      </span>
       <Icon :name="showAdvanced ? 'tabler:chevron-up' : 'tabler:chevron-down'" class="chevron" />
     </div>
 
@@ -165,6 +174,16 @@ const handleGenerate = () => {
     return
   }
 
+  const invalidField = currentTemplate.value.fields.find(f => {
+    const value = (fieldValues[f.key] ?? '').trim()
+    return f.validate && value && !f.validate(value)
+  })
+
+  if (invalidField) {
+    store.showNotification('error', invalidField.validationMessage ?? `${invalidField.label} inválido`)
+    return
+  }
+
   emit('generate', selectedType.value)
 }
 
@@ -264,6 +283,8 @@ label {
 .req { color: var(--primary); margin-left: 2px; }
 
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input:not([type]),
 select {
   width: 100%;
@@ -317,11 +338,11 @@ select {
   background: #fff7f5;
 }
 
-.tpl-icon { font-size: 24px; color: var(--text-secondary); }
+.tpl-icon { color: var(--text-secondary); }
 .tpl-btn.active .tpl-icon { color: var(--primary); }
 
 .tpl-btn span {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-tertiary);
 }
@@ -385,6 +406,18 @@ select {
   font-size: 11px;
   font-family: var(--mono);
   color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.color-preview {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .adv-panel {

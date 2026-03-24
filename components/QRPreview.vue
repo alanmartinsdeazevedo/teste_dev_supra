@@ -49,7 +49,7 @@
 
         <div v-else key="empty" class="state-msg empty">
           <Icon name="tabler:qrcode" class="empty-ico" />
-          <p>Configure e clique em <strong>Gerar</strong></p>
+          <p>Preencha os dados para começar e clique em <strong>Gerar</strong></p>
         </div>
       </Transition>
     </div>
