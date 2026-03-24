@@ -1,5 +1,7 @@
 # QR Code Studio - Teste para desenvolvedor | Supranet
 
+![Guia de Features](./docs/feats-qrcode-studio.png)
+
 ## Funcionalidades do teste
 
 - **Geração de QR Code** a partir de texto livre ou URL via API goQR.me
@@ -25,5 +27,5 @@
 - **Notificações toast** para todas as ações (sucesso, erro e informativo)
 
 ## Instruções
-* Todas as instruções estão no arquivo instrucoes.md
+* Todas as instruções estão no arquivo `docs/instrucoes.md`
 * No diretório do repositório, rode `docker compose up`.
