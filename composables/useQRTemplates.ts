@@ -121,6 +121,15 @@ const templates: QRTemplate[] = [
   }
 ]
 
+export const templateIcons: Record<TemplateType, string> = {
+  text: 'tabler:text-size',
+  url: 'tabler:link',
+  wifi: 'tabler:wifi',
+  email: 'tabler:mail',
+  phone: 'tabler:phone',
+  vcard: 'tabler:address-book'
+}
+
 export const useQRTemplates = () => {
   const getTemplate = (type: TemplateType): QRTemplate => {
     const found = templates.find(t => t.type === type)

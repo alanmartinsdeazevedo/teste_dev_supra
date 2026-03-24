@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
 import { useQRStore } from '@/stores/qrStore'
-import { useQRTemplates } from '@/composables/useQRTemplates'
+import { useQRTemplates, templateIcons } from '@/composables/useQRTemplates'
 import type { TemplateType } from '@/composables/useQRTemplates'
 
 defineProps<{ loading: boolean }>()
@@ -129,15 +129,6 @@ const toggleAdvanced = () => {
   if (import.meta.client) {
     localStorage.setItem('qr_show_advanced', String(showAdvanced.value))
   }
-}
-
-const templateIcons: Record<TemplateType, string> = {
-  text: 'tabler:text-size',
-  url: 'tabler:link',
-  wifi: 'tabler:wifi',
-  email: 'tabler:mail',
-  phone: 'tabler:phone',
-  vcard: 'tabler:address-book'
 }
 
 const initFields = () => {

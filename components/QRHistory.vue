@@ -93,6 +93,7 @@
 import { ref, computed, watch } from 'vue'
 import { useQRStore } from '@/stores/qrStore'
 import type { QRHistoryItem } from '@/stores/qrStore'
+import { useQRTemplates, templateIcons } from '@/composables/useQRTemplates'
 
 const props = defineProps<{ activeId?: string }>()
 const store = useQRStore()
@@ -107,30 +108,15 @@ const showFilters = ref(false)
 
 const emit = defineEmits<{ load: [item: QRHistoryItem] }>()
 
-const typeLabels: Record<string, string> = {
-  text: 'Texto',
-  url: 'URL',
-  wifi: 'Wi-Fi',
-  email: 'E-mail',
-  phone: 'Telefone',
-  vcard: 'Contato'
-}
-
-const typeIcons: Record<string, string> = {
-  text: 'tabler:text-size',
-  url: 'tabler:link',
-  wifi: 'tabler:wifi',
-  email: 'tabler:mail',
-  phone: 'tabler:phone',
-  vcard: 'tabler:address-book'
-}
+const { getAllTemplates } = useQRTemplates()
+const typeLabels = Object.fromEntries(getAllTemplates().map(t => [t.type, t.label]))
 
 const availableTypes = computed(() => {
   const types = new Set(store.history.map(h => h.templateType).filter(Boolean))
   return Array.from(types).map(type => ({
     type: type!,
     label: typeLabels[type!] || type!,
-    icon: typeIcons[type!] || 'tabler:qrcode'
+    icon: templateIcons[type! as keyof typeof templateIcons] || 'tabler:qrcode'
   }))
 })
 

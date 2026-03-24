@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+export type NotificationType = 'success' | 'error' | 'info'
+
 export interface QRConfig {
   text: string
   size: string
@@ -25,7 +27,7 @@ export const useQRStore = defineStore('qrStore', {
       bgcolor: '#ffffff',
       format: 'png'
     } as QRConfig,
-    notification: null as { type: 'success' | 'error' | 'info'; message: string } | null
+    notification: null as { type: NotificationType; message: string } | null
   }),
   actions: {
     saveToHistory(item: QRHistoryItem): boolean {
@@ -60,7 +62,7 @@ export const useQRStore = defineStore('qrStore', {
       }
     },
 
-    showNotification(type: 'success' | 'error' | 'info', message: string) {
+    showNotification(type: NotificationType, message: string) {
       this.notification = { type, message }
       setTimeout(() => {
         this.notification = null
