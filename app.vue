@@ -1,12 +1,20 @@
 <template>
   <main class="app-container">
     <AppNotification />
-    <div class="entrance entrance-0"><AppHeader /></div>
+    <div class="entrance entrance-0">
+      <AppHeader />
+    </div>
 
     <div class="main-grid">
-      <div class="entrance entrance-1"><QRForm :loading="loading" @generate="handleGenerate($event)" /></div>
-      <div ref="previewRef" class="entrance entrance-2"><QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" /></div>
-      <div class="entrance entrance-3"><QRHistory :active-id="currentId" @load="handleLoadFromHistory" /></div>
+      <div class="entrance entrance-1">
+        <QRForm :loading="loading" @generate="handleGenerate($event)" />
+      </div>
+      <div ref="previewRef" class="entrance entrance-2">
+        <QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" />
+      </div>
+      <div class="entrance entrance-3">
+        <QRHistory :active-id="currentId" @load="handleLoadFromHistory" />
+      </div>
     </div>
   </main>
 </template>
@@ -100,8 +108,6 @@ const downloadQR = async () => {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap');
-
 :root {
   --primary: #FA4616;
   --primary-hover: #e03d12;

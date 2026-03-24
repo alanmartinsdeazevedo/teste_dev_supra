@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
@@ -8,6 +7,12 @@ export default defineNuxtConfig({
       title: 'QR Code Studio - Supranet',
       meta: [
         { name: 'description', content: 'Gerador de QR Code' }
+      ],
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap'
+        }
       ]
     }
   },
@@ -18,13 +23,11 @@ export default defineNuxtConfig({
     '@nuxt/icon'
   ],
 
-  // Desativamos a verificação de tipos no build para evitar bloqueios por ficheiros gerados
   typescript: {
     strict: true,
-    typeCheck: false 
+    typeCheck: false
   },
 
-  // Configuramos o ESLint para não travar o build no Docker
   eslint: {
     config: {
       standalone: true
