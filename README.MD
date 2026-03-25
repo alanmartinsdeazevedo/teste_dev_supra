@@ -11,7 +11,7 @@
 
 ## Demo mobile
 
-<video src="./docs/demo-mobile.mp4" controls width="360"></video>
+<video src="https://github.com/user-attachments/assets/2c78af2e-7ce3-4d1d-809e-6031033a06ee" controls width="360"></video>
 
 ## Índice
 
