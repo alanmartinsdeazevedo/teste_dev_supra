@@ -16,7 +16,7 @@
 
         <div v-else-if="url" key="preview" class="qr-display">
           <div class="qr-frame">
-            <img :src="url" alt="QR Code gerado" @error="$emit('error')" />
+            <img :src="url" alt="QR Code gerado" @load="$emit('loaded')" @error="$emit('error')" />
           </div>
           <span v-if="itemId" class="item-id">#{{ itemId.slice(-8) }}</span>
           <div class="btn-row">
@@ -62,7 +62,7 @@ import { useQRStore } from '@/stores/qrStore'
 import { useQRCode } from '@/composables/useQRCode'
 
 const props = defineProps<{ url: string; loading: boolean; itemId?: string }>()
-defineEmits<{ download: []; error: []; clear: [] }>()
+defineEmits<{ download: []; error: []; clear: []; loaded: [] }>()
 
 const store = useQRStore()
 const { generateUrl } = useQRCode()

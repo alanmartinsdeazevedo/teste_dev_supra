@@ -119,8 +119,22 @@ const templates: QRTemplate[] = [
     description: 'Cartão de visita (vCard)',
     fields: [
       { key: 'name', label: 'Nome', placeholder: 'João Silva', required: true },
-      { key: 'phone', label: 'Telefone', placeholder: '+55 11 99999-9999', inputType: 'tel' },
-      { key: 'email', label: 'E-mail', placeholder: 'joao@supranet.com.br', inputType: 'email' },
+      {
+        key: 'phone',
+        label: 'Telefone',
+        placeholder: '+55 31 99999-9999',
+        inputType: 'tel',
+        validate: (v) => /^\+?[\d\s\-(). ]{6,}$/.test(v),
+        validationMessage: 'Informe um número de telefone válido'
+      },
+      {
+        key: 'email',
+        label: 'E-mail',
+        placeholder: 'joao@supranet.com.br',
+        inputType: 'email',
+        validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+        validationMessage: 'Informe um e-mail válido'
+      },
       { key: 'org', label: 'Empresa', placeholder: 'Supranet' },
       { key: 'title', label: 'Cargo', placeholder: 'Desenvolvedor' }
     ],

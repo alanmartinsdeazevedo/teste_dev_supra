@@ -9,8 +9,13 @@
 
 ![Guia de Features](./docs/feats-qrcode-studio.png)
 
+## Demo mobile
+
+<video src="./docs/demo-mobile.mp4" controls width="360"></video>
+
 ## Índice
 
+- [Demo mobile](#demo-mobile)
 - [Arquitetura e decisões técnicas](#arquitetura-e-decisões-técnicas)
 - [Integração com a API goQR.me](#integração-com-a-api-goqrme)
 - [Funcionalidades do teste](#funcionalidades-do-teste)
@@ -25,6 +30,7 @@ A aplicação é uma SPA Nuxt 4 sem `/pages` — `app.vue` é o root único, com
 
 - **Pinia** gerencia o estado global (`currentConfig`, `history`, `notification`), evitando prop drilling entre os componentes e centralizando a persistência no `localStorage`
 - **Proxy server-side** (`server/api/qrcode.get.ts`) encapsula o acesso à API externa, permitindo validação de parâmetros no servidor e evitando expor a URL da API diretamente no cliente. Também adiciona cache de 1h via `Cache-Control`
+- **Composable `useQRActions`** centraliza as ações de negócio (`handleGenerate`, `downloadQR`, histórico), mantendo `app.vue` responsável apenas pela orquestração de UI
 - **Composable `useQRCode`** isola a lógica de montagem da URL, separando apresentação de lógica de negócio
 - **Composable `useQRTemplates`** centraliza a definição dos 6 templates (campos, formatação, validação e ícones), tornando fácil adicionar novos tipos sem alterar componentes
 - **SSR safety** — acessos ao `localStorage` são guardados com `import.meta.client` para evitar erros no servidor
@@ -37,22 +43,29 @@ A chamada à API nunca é feita diretamente do browser. O fluxo completo:
 sequenceDiagram
     actor U as Usuário
     participant F as QRForm
+    participant AC as useQRActions
     participant S as qrStore (Pinia)
     participant C as useQRCode
     participant P as /api/qrcode (Nitro)
     participant A as api.qrserver.com
+    participant PV as QRPreview
 
     U->>F: preenche campos e clica Gerar
-    F->>S: lê currentConfig
-    F->>C: generateUrl(config)
-    C-->>F: /api/qrcode?data=...&size=...&color=...
-    F->>P: GET /api/qrcode?...
+    F->>AC: handleGenerate(templateType)
+    AC->>S: lê currentConfig
+    AC->>C: generateUrl(config)
+    C-->>AC: /api/qrcode?data=...&size=...&color=...
+    AC->>P: GET /api/qrcode?...
     P->>P: valida parâmetros
     P->>A: GET /v1/create-qr-code?...
     A-->>P: imagem binária
-    P-->>F: imagem com Cache-Control: 1h
-    F->>S: saveToHistory(item)
+    P-->>AC: imagem com Cache-Control: 1h
+    AC->>S: saveToHistory(item)
     S->>S: persiste no localStorage
+    AC-->>PV: generatedUrl atualizada
+    PV-->>PV: imagem carregada (@load)
+    PV->>AC: emit loaded
+    AC-->>U: scroll até preview (mobile)
 ```
 
 O proxy valida: presença do campo `data`, tamanho máximo de 900 caracteres, formato (`png`, `jpg`, `svg`, etc.) e padrão do tamanho (`NxN`). Erros são propagados com status HTTP adequado e exibidos via toast ao usuário.

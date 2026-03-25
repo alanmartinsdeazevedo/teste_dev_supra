@@ -6,9 +6,11 @@
     </div>
 
     <div class="main-grid">
-      <div ref="previewRef" class="studio-card entrance entrance-1">
+      <div class="studio-card entrance entrance-1">
         <QRForm :loading="loading" @generate="handleGenerate($event)" />
-        <QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" />
+        <div ref="previewRef">
+          <QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" @loaded="scrollToPreview" />
+        </div>
       </div>
       <div class="entrance entrance-2">
         <QRHistory :active-id="currentId" @load="handleLoadFromHistory" />
@@ -20,88 +22,29 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useQRStore } from '@/stores/qrStore'
-import { useQRCode } from '@/composables/useQRCode'
-import type { QRHistoryItem } from '@/stores/qrStore'
+import { useQRActions } from '@/composables/useQRActions'
+
 const previewRef = ref<HTMLElement | null>(null)
 
-const scrollToPreview = () => {
-  if (!import.meta.client || window.innerWidth > 640) return
-  setTimeout(() => {
-    previewRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, 1000)
-}
-
 const store = useQRStore()
-const { generateUrl } = useQRCode()
-const generatedUrl = ref('')
-const loading = ref(false)
-const currentId = ref('')
+const {
+  generatedUrl,
+  loading,
+  currentId,
+  handleGenerate,
+  handleLoadFromHistory,
+  handleClear,
+  handleImageError,
+  downloadQR
+} = useQRActions()
 
 onMounted(() => {
   store.loadHistory()
 })
 
-const handleGenerate = (templateType: string = 'text') => {
-  if (!store.currentConfig.text.trim()) {
-    store.showNotification('error', 'Por favor, insira um texto ou URL.')
-    return
-  }
-
-  loading.value = true
-  const url = generateUrl(store.currentConfig)
-  generatedUrl.value = url
-
-  const img = new Image()
-  img.onload = () => {
-    loading.value = false
-    const id = Date.now().toString()
-    currentId.value = id
-    const isDuplicate = store.saveToHistory({
-      ...store.currentConfig,
-      id,
-      url,
-      timestamp: Date.now(),
-      templateType
-    })
-    store.showNotification(isDuplicate ? 'info' : 'success', isDuplicate ? 'QR Code já existente' : 'QR Code salvo!')
-    scrollToPreview()
-  }
-  img.onerror = () => {
-    loading.value = false
-    generatedUrl.value = ''
-    store.showNotification('error', 'Erro ao gerar o QR Code. Verifique os parâmetros e tente novamente.')
-  }
-  img.src = url
-}
-
-const handleLoadFromHistory = (item: QRHistoryItem) => {
-  generatedUrl.value = item.url
-  currentId.value = item.id
-}
-
-const handleClear = () => {
-  generatedUrl.value = ''
-  currentId.value = ''
-}
-
-const handleImageError = () => {
-  store.showNotification('error', 'Erro ao carregar a imagem do QR Code.')
-}
-
-const downloadQR = async () => {
-  try {
-    const response = await fetch(generatedUrl.value)
-    if (!response.ok) throw new Error('Falha no download')
-    const blob = await response.blob()
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = `qrcode-${Date.now()}.${store.currentConfig.format}`
-    link.click()
-    URL.revokeObjectURL(link.href)
-    store.showNotification('success', 'Download iniciado!')
-  } catch {
-    store.showNotification('error', 'Erro ao baixar a imagem. Tente novamente.')
-  }
+const scrollToPreview = () => {
+  if (!import.meta.client || window.innerWidth > 640) return
+  previewRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 </script>
 
