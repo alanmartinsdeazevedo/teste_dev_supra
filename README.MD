@@ -1,11 +1,15 @@
 # QR Code Studio - Teste para desenvolvedor | Supranet
 
+<div align="center">
+
 ![Nuxt](https://img.shields.io/badge/Nuxt-4.x-00DC82?style=flat&logo=nuxt.js&logoColor=white)
 ![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)
 ![Bun](https://img.shields.io/badge/Bun-1.x-fbf0df?style=flat&logo=bun&logoColor=black)
 ![Pinia](https://img.shields.io/badge/Pinia-2.x-FFD859?style=flat&logo=pinia&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker&logoColor=white)
+
+</div>
 
 ![Guia de Features](./docs/feats-qrcode-studio.png)
 

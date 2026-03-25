@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useQRStore } from '@/stores/qrStore'
 import { useQRCode } from '@/composables/useQRCode'
 import type { QRHistoryItem } from '@/stores/qrStore'
@@ -10,6 +10,14 @@ export const useQRActions = () => {
   const generatedUrl = ref('')
   const loading = ref(false)
   const currentId = ref('')
+  let loadingFromHistory = false
+
+  watch(() => store.currentConfig, () => {
+    if (!loadingFromHistory && generatedUrl.value) {
+      generatedUrl.value = ''
+      currentId.value = ''
+    }
+  }, { deep: true })
 
   const handleGenerate = (templateType: string = 'text') => {
     if (!store.currentConfig.text.trim()) {
@@ -47,8 +55,11 @@ export const useQRActions = () => {
   }
 
   const handleLoadFromHistory = (item: QRHistoryItem) => {
+    loadingFromHistory = true
     generatedUrl.value = item.url
     currentId.value = item.id
+    store.loadFromHistory(item)
+    nextTick(() => { loadingFromHistory = false })
   }
 
   const handleClear = () => {

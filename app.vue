@@ -8,7 +8,7 @@
     <div class="main-grid">
       <div class="studio-card entrance entrance-1">
         <QRForm :loading="loading" @generate="handleGenerate($event)" />
-        <div ref="previewRef">
+        <div ref="previewRef" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
           <QRPreview :url="generatedUrl" :loading="loading" :item-id="currentId" @download="downloadQR" @error="handleImageError" @clear="handleClear" @loaded="scrollToPreview" />
         </div>
       </div>
